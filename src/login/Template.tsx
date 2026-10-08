@@ -5,7 +5,7 @@ import { useSetClassName } from "keycloakify/tools/useSetClassName";
 import { useInitialize } from "keycloakify/login/Template.useInitialize";
 import type { I18n } from "./i18n";
 import type { KcContext } from "./KcContext";
-import { getTenant } from "./tenants";
+import { getTenant, getTenantFontCss } from "./tenants";
 import "./styles.css";
 
 export default function Template(props: TemplateProps<KcContext, I18n>) {
@@ -63,7 +63,10 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
     // Tenant colours become CSS custom properties, used throughout styles.css.
     const { colours } = tenant;
     const panelImage = tenant.backgroundUrl ? `url("${tenant.backgroundUrl}")` : "none";
+    // A font file dropped in tenants/<id>/ replaces the default fonts for all text.
+    const tenantFont = getTenantFontCss(tenant);
     const themeStyle = {
+        ...(tenantFont.stack && { "--font-display": tenantFont.stack, "--font-body": tenantFont.stack }),
         "--brand": colours.brand,
         "--accent": colours.accent,
         "--accent-dark": colours.accentDark,
@@ -85,6 +88,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
     return (
         <div className={`kc-split kc-split--brand-${tenant.brandPanelSide ?? "left"}`} style={themeStyle}>
+            {tenantFont.css && <style>{tenantFont.css}</style>}
             {/* Brand panel: left on wide screens by default (tenant.json "brandPanelSide") */}
             <aside className="kc-brand">
                 <div className="kc-brand__logo">

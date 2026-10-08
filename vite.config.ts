@@ -63,6 +63,19 @@ function validateTenant(tenantsDir: string, id: string) {
         }
     }
 
+    // At most one font file, with a lowercase extension (the theme only looks for lowercase)
+    const fontFiles = readdirSync(join(tenantsDir, id)).filter(f => /\.(woff2|woff|ttf|otf)$/i.test(f));
+    for (const file of fontFiles) {
+        if (!/\.(woff2|woff|ttf|otf)$/.test(file)) {
+            throw new Error(`tenants/${id}/${file}: rename the extension to lowercase (e.g. .ttf), or it won't be used`);
+        }
+    }
+    if (fontFiles.length > 1) {
+        throw new Error(
+            `tenants/${id}/ has ${fontFiles.length} font files (${fontFiles.join(", ")}). Keep just one: it's used for all text.`
+        );
+    }
+
     const colours = tenant.colours ?? {};
     for (const field of ["brand", "accent", "accentDark", "tint", "tint2", "focus"]) {
         if (typeof colours[field] !== "string") fail(`"colours.${field}" is required`);
@@ -84,7 +97,7 @@ export default defineConfig({
         keycloakify({
             themeName: loadTenantIds(),
             accountThemeImplementation: "none",
-            groupId: "serp",
+            groupId: "uk.ac.swansea.serp",
             artifactId: "serp-keycloak-themes",
             // Build a single jar, for Keycloak 26 and newer (Keycloakify's "all other versions").
             // CI renames it to serp-keycloak-themes-<version>.jar when releasing.
