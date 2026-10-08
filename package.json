@@ -1,6 +1,6 @@
 {
     "name": "serp-keycloak-theme",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Multi-tenant Keycloak login theme (Keycloakify 11)",
     "type": "module",
     "scripts": {
