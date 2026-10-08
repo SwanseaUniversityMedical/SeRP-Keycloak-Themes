@@ -3,9 +3,9 @@
     "name": "DPUK",
     "organisation": "Dementias Platform UK",
     "images": {
-        "logo": "logo.svg",
+        "logo": "logo.png",
         "logoAlt": "Neurological Data Platform – Dementias Hub",
-        "background": "background.webp"
+        "background": "background.jpg"
     },
     "colours": {
         "brand": "#21244C",
