@@ -29,6 +29,7 @@ function loadTenantIds(): string[] {
     return ids;
 }
 
+/** Fails the build early with a clear message instead of producing a broken page. */
 function validateTenant(tenantsDir: string, id: string) {
     const where = `tenants/${id}/tenant.json`;
     const fail = (problem: string): never => {
@@ -50,6 +51,10 @@ function validateTenant(tenantsDir: string, id: string) {
         if (typeof tenant[field] !== "string" || tenant[field] === "") fail(`"${field}" is required`);
     }
 
+    if (tenant.brandPanelSide !== undefined && !["left", "right"].includes(tenant.brandPanelSide)) {
+        fail(`"brandPanelSide" must be "left" or "right"`);
+    }
+
     for (const field of ["logo", "background"]) {
         const ref = tenant.images?.[field];
         if (ref === undefined) fail(`"images.${field}" is required (use null for none)`);
@@ -62,7 +67,7 @@ function validateTenant(tenantsDir: string, id: string) {
     for (const field of ["brand", "accent", "accentDark", "tint", "tint2", "focus"]) {
         if (typeof colours[field] !== "string") fail(`"colours.${field}" is required`);
     }
-    for (const field of ["base", "text", "subtext", "muted", "scrim"]) {
+    for (const field of ["base", "text", "subtext", "muted"]) {
         if (typeof colours.panel?.[field] !== "string") fail(`"colours.panel.${field}" is required`);
     }
 
@@ -72,14 +77,17 @@ function validateTenant(tenantsDir: string, id: string) {
     }
 }
 
+// https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react(),
         keycloakify({
             themeName: loadTenantIds(),
             accountThemeImplementation: "none",
-            groupId: "serp",
+            groupId: "uk.ac.swansea.serp",
             artifactId: "serp-keycloak-themes",
+            // Build a single jar, for Keycloak 26 and newer (Keycloakify's "all other versions").
+            // CI renames it to serp-keycloak-themes-<version>.jar when releasing.
             keycloakVersionTargets: {
                 "22-to-25": false,
                 "all-other-versions": "serp-keycloak-themes.jar"
