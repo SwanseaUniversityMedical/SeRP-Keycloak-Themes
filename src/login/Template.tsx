@@ -62,9 +62,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
 
     // Tenant colours become CSS custom properties, used throughout styles.css.
     const { colours } = tenant;
-    const panelLayers = [colours.panel.scrim, tenant.backgroundUrl && `url("${tenant.backgroundUrl}")`]
-        .filter(layer => layer && layer !== "none")
-        .join(", ");
+    const panelImage = tenant.backgroundUrl ? `url("${tenant.backgroundUrl}")` : "none";
     const themeStyle = {
         "--brand": colours.brand,
         "--accent": colours.accent,
@@ -76,7 +74,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
         "--panel-text": colours.panel.text,
         "--panel-subtext": colours.panel.subtext,
         "--panel-muted": colours.panel.muted,
-        "--panel-bg": panelLayers || "none"
+        "--panel-bg": panelImage
     } as CSSProperties;
 
     // On the sign-in page the title says what the user is signing in to:
@@ -86,8 +84,8 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
         : advancedMsgStr("contextRealm", realmName);
 
     return (
-        <div className="kc-split" style={themeStyle}>
-            {/* Brand panel (shown on the right on wide screens) */}
+        <div className={`kc-split kc-split--brand-${tenant.brandPanelSide ?? "left"}`} style={themeStyle}>
+            {/* Brand panel: left on wide screens by default (tenant.json "brandPanelSide") */}
             <aside className="kc-brand">
                 <div className="kc-brand__logo">
                     {tenant.logoUrl !== null && (

@@ -1,7 +1,7 @@
 # Keycloak login theme: one JSON per tenant
 
-A Keycloakify (v11) login theme, based on the official keycloakify-starter with a split layout: the form on the left and a branded
-image panel on the right. Each tenant is a folder in `tenants/` with one `tenant.json`
+A Keycloakify (v11) login theme, based on the official keycloakify-starter with a split layout: a branded image panel on the left and
+the form on the right. Each tenant is a folder in `tenants/` with one `tenant.json`
 and its images. Every folder becomes a separate login theme in Keycloak.
 
 ## Adding a tenant
@@ -24,7 +24,7 @@ and its images. Every folder becomes a separate login theme in Keycloak.
    npm run build-keycloak-theme
    ```
 
-5. Deploy the jar from `dist_keycloak/`, then in Keycloak choose **Realm settings →
+5. Open a pull request. When it's merged, CI releases a new jar. Deploy it, then in Keycloak choose **Realm settings →
    Themes → Login theme → newhub** for the tenant's realm.
 
 Nothing in `src/` needs changing. The build checks every `tenant.json` and stops with a
@@ -37,6 +37,7 @@ clear message if something is missing, such as an image file that isn't in the f
     "$schema": "../tenant.schema.json",   // gives autocomplete and checks in VS Code
     "name": "DPUK",                        // short name, usable in text as {{name}}
     "organisation": "Dementias Platform UK", // usable in text as {{organisation}}
+    "brandPanelSide": "left",             // optional: "left" (default) or "right"
     "images": {
         "logo": "logo.svg",                // file in this folder, a https:// URL, or null
         "logoAlt": "Dementias Hub",        // read out by screen readers
@@ -135,8 +136,9 @@ src/login/
   styles.css              all styling, driven by the tenant colours
   pages/LoginPageExpired.tsx  page-expired screen with two buttons
   KcContext.ts, KcPageStory.tsx  from the starter (types, Storybook helper)
-.github/workflows/ci.yaml builds the theme on GitHub; bump "version" in package.json
-                          to publish a GitHub Release with the jars attached
+.github/workflows/
+  pr-build.yaml           checks every pull request builds; shows the error if not
+  release.yaml            on merge to main: releases serp-keycloak-themes-<version>.jar
 ```
 
 ## Setup (first time)
@@ -167,15 +169,54 @@ Commit both along with your changes. `npm run dev` and `npm run storybook` regen
 If you're behind a proxy, Maven needs its own proxy settings in `~/.m2/settings.xml`;
 it ignores the `http_proxy` / `https_proxy` environment variables.
 
-## Building and deploying
+## Building locally
 
 ```bash
 npm run build-keycloak-theme
 ```
 
-Copy the jar from `dist_keycloak/` into Keycloak's `providers/` folder and restart
-(run `kc.sh build` first if you start Keycloak with `--optimized`). Every tenant's theme is
-in the one jar.
+This produces one jar, `dist_keycloak/serp-keycloak-themes.jar`, for Keycloak 26 and newer.
+It contains every tenant's theme. (The jar name and the single Keycloak target are set in
+`keycloakVersionTargets` in `vite.config.ts`.)
+
+Build inside WSL's own file system (a path starting `/home/`), not under `/mnt/c`, or Maven
+fails with "...pom.part.lock (No such file or directory)".
+
+## CI and releases (GitHub Actions)
+
+Two workflows in `.github/workflows/`:
+
+- **`pr-build.yaml`, on every pull request into `main`:** builds the theme. If the build
+  fails, the check goes red and the first error (for example a `tenant.json` problem or a
+  TypeScript error) is shown on the pull request: as an annotation, in the run summary with
+  the end of the build log, and as a comment on the pull request.
+- **`release.yaml`, when a pull request is merged into `main`:** builds the theme and
+  publishes a GitHub Release `v<version>` with `serp-keycloak-themes-<version>.jar` attached.
+
+Versions: the major and minor numbers come from `"version"` in `package.json`; the patch
+number goes up by one on every release (v1.0.0, v1.0.1, v1.0.2, ...). To start a new series,
+change `package.json` to e.g. `"1.1.0"` in a pull request; the merge releases v1.1.0.
+
+Repository settings needed (an admin may have to do these):
+
+- Settings → Actions → General → Workflow permissions → **Read and write permissions**
+  (lets the release workflow create releases and the PR workflow comment).
+- Settings → Branches → add a rule for `main` → **Require a pull request before merging**
+  and **Require status checks to pass** → select **Build theme**. This stops broken changes
+  being merged, and stops direct pushes to `main` creating releases.
+
+## Deploying
+
+Download `serp-keycloak-themes-<version>.jar` from the release, copy it into Keycloak's
+`providers/` folder (removing any older `serp-keycloak-themes-*.jar` there), run `kc.sh build`
+if you start Keycloak with `--optimized`, and restart. Then, for each realm: **Realm settings →
+Themes → Login theme** → the tenant's theme name.
+
+On a server, with the GitHub CLI:
+
+```bash
+gh release download --repo <org>/<repo> --pattern "serp-keycloak-themes-*.jar" --dir /tmp
+```
 
 To try it locally with Docker first: `npx keycloakify start-keycloak`.
 

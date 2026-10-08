@@ -7,6 +7,8 @@
 export type TenantConfig = {
     name: string;
     organisation: string;
+    /** Which side the brand panel sits on, on wide screens. Defaults to "left". */
+    brandPanelSide?: "left" | "right";
     images: {
         logo: string | null;
         logoAlt?: string;
@@ -24,7 +26,6 @@ export type TenantConfig = {
             text: string;
             subtext: string;
             muted: string;
-            scrim: string;
         };
     };
     messages?: Record<string, string>;

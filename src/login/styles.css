@@ -27,11 +27,15 @@
     --error: #b42318;
 
     display: flex;
-    flex-direction: row-reverse; /* brand panel on the right */
+    flex-direction: row; /* brand panel on the left, form on the right */
     min-height: 100vh;
     font-family: var(--font-body);
     color: var(--text);
     background: #f7f6fa;
+}
+
+.kc-split--brand-right {
+    flex-direction: row-reverse; /* tenant.json "brandPanelSide": "right" */
 }
 
 .kc-split *,
@@ -443,8 +447,9 @@
 /* ---------- Small screens: form first, compact brand strip ---------- */
 
 @media (max-width: 900px) {
-    .kc-split {
-        flex-direction: column-reverse;
+    .kc-split,
+    .kc-split--brand-right {
+        flex-direction: column-reverse; /* form first, brand strip below */
     }
     .kc-brand {
         flex: none;
