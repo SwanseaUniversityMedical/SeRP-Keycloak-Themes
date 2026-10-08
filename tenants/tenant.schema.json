@@ -1,0 +1,74 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Keycloak login theme tenant",
+    "description": "Everything that makes one tenant's login pages look and read differently. The folder name is the theme name chosen in Keycloak.",
+    "type": "object",
+    "required": ["name", "organisation", "images", "colours"],
+    "additionalProperties": false,
+    "properties": {
+        "$schema": { "type": "string" },
+        "name": {
+            "type": "string",
+            "description": "Short name, e.g. \"DPUK\". Available in text as {{name}}."
+        },
+        "organisation": {
+            "type": "string",
+            "description": "Full organisation name, e.g. \"Dementias Platform UK\". Available in text as {{organisation}}."
+        },
+        "images": {
+            "type": "object",
+            "required": ["logo", "background"],
+            "additionalProperties": false,
+            "properties": {
+                "logo": {
+                    "type": ["string", "null"],
+                    "description": "Logo shown at the top of the brand panel: a file name in this tenant's folder (e.g. \"logo.svg\") or a full https:// URL. null for no logo."
+                },
+                "logoAlt": {
+                    "type": "string",
+                    "description": "Text read out by screen readers for the logo. Defaults to the tenant name."
+                },
+                "background": {
+                    "type": ["string", "null"],
+                    "description": "Brand panel image: a file name in this tenant's folder (e.g. \"background.webp\") or a full https:// URL. Artwork should sit on the right. About 2560×1440 works well. null for a plain colour."
+                }
+            }
+        },
+        "colours": {
+            "type": "object",
+            "required": ["brand", "accent", "accentDark", "tint", "tint2", "focus", "panel"],
+            "additionalProperties": false,
+            "properties": {
+                "brand": { "type": "string", "description": "Main buttons." },
+                "accent": {
+                    "type": "string",
+                    "description": "Links, checkboxes and icons. Must be readable as text on white (contrast 4.5:1 or more)."
+                },
+                "accentDark": { "type": "string", "description": "Link hover colour." },
+                "tint": { "type": "string", "description": "Pale background for icons and the 'Signing in to…' label." },
+                "tint2": { "type": "string", "description": "Paler background for notes." },
+                "focus": { "type": "string", "description": "Keyboard focus outline." },
+                "panel": {
+                    "type": "object",
+                    "required": ["base", "text", "subtext", "muted", "scrim"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "base": { "type": "string", "description": "Panel colour shown behind/while loading the image." },
+                        "text": { "type": "string", "description": "Panel headline colour." },
+                        "subtext": { "type": "string", "description": "Panel paragraph colour." },
+                        "muted": { "type": "string", "description": "Panel footer line colour." },
+                        "scrim": {
+                            "type": "string",
+                            "description": "CSS gradient laid over the left of the image so the text stays readable. Use \"none\" for no fade."
+                        }
+                    }
+                }
+            }
+        },
+        "messages": {
+            "type": "object",
+            "description": "Text for this tenant. Overrides tenants/_defaults.json and Keycloak's built-in text. Keys are Keycloak message keys (see node_modules/keycloakify/src/login/i18n/messages_defaultSet/en.ts) or this theme's own keys (see tenants/_defaults.json). {{name}} and {{organisation}} are replaced; {0}, {1} are filled in by the page.",
+            "additionalProperties": { "type": "string" }
+        }
+    }
+}
