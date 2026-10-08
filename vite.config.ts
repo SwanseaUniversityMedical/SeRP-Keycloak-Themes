@@ -84,7 +84,7 @@ export default defineConfig({
         keycloakify({
             themeName: loadTenantIds(),
             accountThemeImplementation: "none",
-            groupId: "uk.ac.swansea.serp",
+            groupId: "serp",
             artifactId: "serp-keycloak-themes",
             // Build a single jar, for Keycloak 26 and newer (Keycloakify's "all other versions").
             // CI renames it to serp-keycloak-themes-<version>.jar when releasing.
