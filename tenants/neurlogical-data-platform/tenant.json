@@ -1,10 +1,10 @@
 {
     "$schema": "../tenant.schema.json",
-    "name": "DPUK",
-    "organisation": "Dementias Platform UK",
+    "name": "NDP",
+    "organisation": "Neurlogical Data Platform",
     "images": {
         "logo": "logo.png",
-        "logoAlt": "Neurological Data Platform – Dementias Hub",
+        "logoAlt": "Neurological Data Platform",
         "background": "background.jpg"
     },
     "colours": {
@@ -23,7 +23,8 @@
     },
     "messages": {
         "brandPanelFooter": "{{organisation}} · Powered by SeRP",
-        "panel.login.headline": "Welcome to the DPUK Data Portal.",
-        "panel.login.subtext": "Sign in to access your approved projects and datasets in a secure research environment."
+        "panel.login.headline": "Welcome to the Neurlogical Data Platform.",
+        "panel.login.subtext": "",
+        "contextClientRealm": "Signing in to {0}"
     }
 }
