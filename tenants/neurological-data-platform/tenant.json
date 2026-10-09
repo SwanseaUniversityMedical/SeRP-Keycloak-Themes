@@ -1,7 +1,7 @@
 {
     "$schema": "../tenant.schema.json",
     "name": "NDP",
-    "organisation": "Neurlogical Data Platform",
+    "organisation": "Neurological Data Platform",
     "images": {
         "logo": "logo.png",
         "logoAlt": "Neurological Data Platform",
@@ -23,7 +23,7 @@
     },
     "messages": {
         "brandPanelFooter": "{{organisation}} · Powered by SeRP",
-        "panel.login.headline": "Welcome to the Neurlogical Data Platform.",
+        "panel.login.headline": "Welcome to the Neurological Data Platform.",
         "panel.login.subtext": "",
         "contextClientRealm": "Signing in to {0}"
     }
