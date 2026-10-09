@@ -24,7 +24,7 @@
     "messages": {
         "brandPanelFooter": "{{organisation}} · Powered by SeRP",
         "panel.login.headline": "Welcome to the Neurlogical Data Platform.",
-        "panel.login.subtext": "",
+        "panel.login.subtext": " ",
         "contextClientRealm": "Signing in to {0}"
     }
 }
