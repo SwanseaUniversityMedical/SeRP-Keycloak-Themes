@@ -9,9 +9,9 @@
 
 import { lazy, Suspense, type ReactNode } from "react";
 
-export type ThemeName = "dpuk" | "serp";
+export type ThemeName = "dpuk" | "serp" | "sld";
 
-export const themeNames: ThemeName[] = ["dpuk", "serp"];
+export const themeNames: ThemeName[] = ["dpuk", "serp", "sld"];
 
 export type KcEnvName = never;
 
