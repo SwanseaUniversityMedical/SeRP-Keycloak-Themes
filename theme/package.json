@@ -8,7 +8,7 @@
         "build": "tsc && vite build",
         "build-keycloak-theme": "npm run build && keycloakify build",
         "storybook": "storybook dev -p 6006",
-        "format": "prettier . --write",
+        "format": "prettier .. --write",
         "prebuild": "node scripts/generate-tenant-messages.mjs && keycloakify update-kc-gen",
         "predev": "node scripts/generate-tenant-messages.mjs",
         "prestorybook": "node scripts/generate-tenant-messages.mjs"
