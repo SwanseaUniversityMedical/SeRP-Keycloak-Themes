@@ -34,7 +34,7 @@ jobs:
       notation-cert: ${{ vars.NOTATION_CERT }}
       comment-pr: "true"
       comment-release: "true"
-      release-tag-format: 'v${version}-SeRP-keycoak-theme'
+      release-tag-format: 'v${version}-SeRP-keycloak-theme'
 
     secrets:
       notation-key: ${{ secrets.NOTATION_KEY }}
